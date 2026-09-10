@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Usuário</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#f5f7fb;
+            font-family:'Inter', sans-serif;
+            padding:40px;
+        }
+
+        .container{
+            max-width:600px;
+            margin:auto;
+            background:white;
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0 4px 14px rgba(0,0,0,0.08);
+        }
+
+        h1{
+            margin-bottom:8px;
+            color:#111827;
+        }
+
+        .subtitulo{
+            color:#64748b;
+            font-size:14px;
+            margin-bottom:30px;
+        }
+
+        .grupo{
+            margin-bottom:22px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:600;
+            color:#374151;
+        }
+
+        input, select{
+            width:100%;
+            padding:14px;
+            border:1px solid #d1d5db;
+            border-radius:12px;
+            font-size:15px;
+        }
+
+        input:focus, select:focus{
+            outline:none;
+            border-color:#2563eb;
+        }
+
+        .dica{
+            font-size:13px;
+            color:#94a3b8;
+            margin-top:6px;
+        }
+
+        button{
+            width:100%;
+            padding:16px;
+            border:none;
+            border-radius:12px;
+            background:#2563eb;
+            color:white;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#1d4ed8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Cadastrar Usuário</h1>
+        <p class="subtitulo">O login (nome.sobrenome) é gerado automaticamente a partir do nome completo.</p>
+
+        <form action="/salvar_usuario" method="POST">
+
+            <div class="grupo">
+                <label>Nome completo</label>
+                <input type="text" name="nome" placeholder="Ex: Maria Silva" required>
+            </div>
+
+            <div class="grupo">
+                <label>Senha inicial</label>
+                <input type="password" name="senha" placeholder="6 dígitos"
+                       inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required>
+                <p class="dica">O usuário poderá trocar essa senha depois do primeiro acesso.</p>
+            </div>
+
+            <button type="submit">
+                Cadastrar Usuário
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Monitoramento</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family:'Inter', sans-serif;
+            background:#f5f7fb;
+            color:#111827;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            width:100%;
+            height:85px;
+            background:white;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 40px;
+            border-bottom:1px solid #e5e7eb;
+        }
+
+        .logo-area { display:flex; align-items:center; gap:16px; }
+
+        .logo {
+            width:52px; height:52px;
+            background:#3b82f6;
+            border-radius:12px;
+            display:flex; align-items:center; justify-content:center;
+            color:white; font-size:24px;
+        }
+
+        .logo-text h2 { font-size:18px; font-weight:700; }
+        .logo-text p  { color:#64748b; font-size:14px; }
+
+        .menu { color:#2563eb; font-weight:600; display:flex; align-items:center; gap:10px; }
+
+        /* ── CONTAINER ── */
+        .container { padding:40px; }
+
+        .titulo { margin-bottom:35px; }
+        .titulo h1 { font-size:56px; font-weight:800; margin-bottom:10px; color:#0f172a; }
+        .titulo p  { color:#64748b; font-size:22px; }
+
+        /* ── CARDS ── */
+        .cards {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+            gap:24px;
+            margin-bottom:35px;
+        }
+
+        .card {
+            background:white;
+            border-radius:20px;
+            padding:30px;
+            box-shadow:0 4px 14px rgba(0,0,0,0.06);
+            border:1px solid #e2e8f0;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .card-info h3 { color:#64748b; font-size:18px; margin-bottom:15px; font-weight:500; }
+        .card-info h2 { font-size:54px; font-weight:700; }
+
+        .card-icon {
+            width:70px; height:70px;
+            border-radius:18px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:28px;
+        }
+
+        .green { background:#dcfce7; color:#16a34a; }
+        .blue  { background:#dbeafe; color:#2563eb; }
+        .red   { background:#fee2e2; color:#ef4444; }
+
+        /* ── BOTÕES DE AÇÃO ── */
+        .acoes {
+            display:flex;
+            gap:20px;
+            margin-bottom:40px;
+            flex-wrap:wrap;
+        }
+
+        .btn {
+            padding:16px 28px;
+            border-radius:12px;
+            text-decoration:none;
+            font-weight:600;
+            display:flex; align-items:center; gap:12px;
+            transition:0.3s;
+            border:1px solid #dbe1ea;
+            background:white;
+            color:#111827;
+            box-shadow:0 2px 6px rgba(0,0,0,0.04);
+            cursor:pointer;
+            font-size:15px;
+        }
+
+        .btn:hover { transform:translateY(-2px); }
+
+        .btn-primary { background:#3b82f6; color:white; border:none; }
+        .btn-primary:hover { background:#2563eb; }
+
+        .btn-secondary { background:#f1f5f9; color:#374151; border:none; }
+        .btn-secondary:hover { background:#e2e8f0; transform:none; }
+
+        /* ── CAIXAS DE TABELA ── */
+        .table-box {
+            background:white;
+            border-radius:20px;
+            padding:30px;
+            box-shadow:0 4px 14px rgba(0,0,0,0.06);
+            border:1px solid #e2e8f0;
+        }
+
+        .table-box h2 { margin-bottom:30px; font-size:28px; }
+
+        /* ── FILTROS AVANÇADOS ── */
+        .filtros-grid {
+            display:grid;
+            grid-template-columns: 100px 1fr 1fr 1fr 160px;
+            gap:14px;
+            margin-bottom:16px;
+        }
+
+        .filtro-grupo { display:flex; flex-direction:column; gap:6px; }
+
+        .filtro-grupo label {
+            font-size:13px;
+            font-weight:600;
+            color:#64748b;
+            text-transform:uppercase;
+            letter-spacing:0.04em;
+        }
+
+        .filtro-grupo input,
+        .filtro-grupo select {
+            padding:10px 14px;
+            border:1px solid #d1d5db;
+            border-radius:10px;
+            font-size:14px;
+            font-family:'Inter', sans-serif;
+            background:white;
+            color:#111827;
+            transition:border-color 0.2s;
+        }
+
+        .filtro-grupo input:focus,
+        .filtro-grupo select:focus {
+            outline:none;
+            border-color:#3b82f6;
+        }
+
+        .filtro-status-row {
+            display:grid;
+            grid-template-columns: 220px auto;
+            gap:14px;
+            align-items:flex-end;
+            margin-bottom:24px;
+        }
+
+        .filtros-botoes {
+            display:flex;
+            gap:10px;
+            align-items:center;
+        }
+
+        /* ── TABELA ── */
+        table { width:100%; border-collapse:collapse; }
+
+        thead th {
+            text-align:left;
+            padding:18px;
+            color:#64748b;
+            border-bottom:1px solid #e5e7eb;
+            font-size:15px;
+        }
+
+        tbody td {
+            padding:18px;
+            border-bottom:1px solid #eef2f7;
+            font-size:15px;
+        }
+
+        tbody tr:hover { background:#f8fafc; }
+
+        /* ── STATUS BADGES ── */
+        .status {
+            padding:8px 14px;
+            border-radius:10px;
+            font-size:13px;
+            font-weight:700;
+            display:inline-block;
+        }
+
+        .status-agendado   { background:#dbeafe; color:#2563eb; }
+        .status-andamento  { background:#fef3c7; color:#d97706; }
+        .status-finalizado { background:#dcfce7; color:#16a34a; }
+        .status-atrasado   { background:#fee2e2; color:#dc2626; }
+
+        /* ── AÇÕES DA TABELA ── */
+        .acoes-tabela { display:flex; gap:8px; flex-wrap:wrap; }
+
+        .btn-acao {
+            padding:8px 16px;
+            border-radius:8px;
+            font-size:13px;
+            font-weight:600;
+            border:1px solid #dbe1ea;
+            background:white;
+            color:#111827;
+            cursor:pointer;
+            transition:0.2s;
+        }
+
+        .btn-acao:hover { background:#f1f5f9; }
+        .btn-acao.finalizar { border-color:#16a34a; color:#16a34a; }
+        .btn-acao.finalizar:hover { background:#dcfce7; }
+        .btn-acao.reagendar { border-color:#d97706; color:#d97706; }
+        .btn-acao.reagendar:hover { background:#fef3c7; }
+        .btn-acao.atraso { border-color:#dc2626; color:#dc2626; }
+        .btn-acao.atraso:hover { background:#fee2e2; }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display:none;
+            position:fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background:rgba(0,0,0,0.5);
+            z-index:999;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .modal-overlay.ativo { display:flex; }
+
+        .modal {
+            background:white;
+            width:380px;
+            padding:32px;
+            border-radius:20px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .modal h3 { margin-bottom:20px; font-size:20px; }
+
+        .modal label { font-size:14px; font-weight:600; color:#374151; display:block; margin-bottom:8px; }
+
+        .modal input[type="date"] {
+            width:100%;
+            padding:12px;
+            border:1px solid #d1d5db;
+            border-radius:10px;
+            font-size:15px;
+            margin-bottom:20px;
+        }
+
+        .modal-botoes { display:flex; gap:10px; }
+
+        /* ── RESPONSIVO ── */
+        @media(max-width:900px) {
+            .titulo h1 { font-size:40px; }
+            .navbar, .container { padding:20px; }
+            .acoes { flex-direction:column; }
+            .btn { width:100%; justify-content:center; }
+            .table-box { overflow:auto; }
+            table { min-width:850px; }
+            .filtros-grid { grid-template-columns:1fr 1fr; }
+            .filtro-status-row { grid-template-columns:1fr; }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo-area">
+            <div class="logo"><i class="fa-solid fa-building"></i></div>
+            <div class="logo-text">
+                <h2>Sistema de Monitoramento</h2>
+                <p>de Condomínios</p>
+            </div>
+        </div>
+        <div class="menu">
+            <i class="fa-solid fa-circle-user"></i> Administrador
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- TÍTULO -->
+        <div class="titulo">
+            <h1>Dashboard de serviços</h1>
+            <p>Acompanhe e gerencie todos os serviços dos condomínios</p>
+        </div>
+
+        <!-- CARDS -->
+        <div class="cards">
+
+            <div class="card">
+                <div class="card-info">
+                    <h3>ALERTAS DE HOJE</h3>
+                    <h2>{{ alertas_dia }}</h2>
+                </div>
+                <div class="card-icon red">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-info">
+                    <h3>Serviços finalizados</h3>
+                    <h2>{{ finalizados }}</h2>
+                </div>
+                <div class="card-icon green">
+                    <i class="fa-regular fa-circle-check"></i>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-info">
+                    <h3>Serviços agendados</h3>
+                    <h2>{{ agendados }}</h2>
+                </div>
+                <div class="card-icon blue">
+                    <i class="fa-regular fa-calendar"></i>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-info">
+                    <h3>Serviços em atraso</h3>
+                    <h2>{{ atrasados }}</h2>
+                </div>
+                <div class="card-icon red">
+                    <i class="fa-solid fa-exclamation"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ALERTAS DO DIA -->
+        <div class="table-box" style="margin-bottom:30px;">
+            <h2>Alertas de Hoje</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mensagem</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if alertas %}
+                        {% for alerta in alertas %}
+                        <tr>
+                            <td>{{ alerta[0] }}</td>
+                            <td>{{ alerta[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="2" style="text-align:center; color:#64748b; padding:20px;">
+                                Nenhum alerta registrado hoje.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- BOTÕES DE AÇÃO -->
+        <div class="acoes">
+            <a href="/novo_servico" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> Incluir Serviço
+            </a>
+            <a href="/novo_prestador" class="btn">
+                <i class="fa-solid fa-users"></i> Cadastro de Prestadores
+            </a>
+            <a href="/novo_tipo_servico" class="btn">
+                <i class="fa-solid fa-box"></i> Cadastro de Tipos de Serviços
+            </a>
+        </div>
+
+        <!-- TABELA COM FILTROS AVANÇADOS -->
+        <div class="table-box">
+
+            <h2>Agendamentos recentes</h2>
+
+            <form method="GET" action="/">
+
+                <!-- linha 1: OS | Condomínio | Serviço | Prestador | Data -->
+                <div class="filtros-grid">
+
+                    <div class="filtro-grupo">
+                        <label>OS</label>
+                        <input type="number" name="os" placeholder="Nº OS"
+                               value="{{ filtro_os }}">
+                    </div>
+
+                    <div class="filtro-grupo">
+                        <label>Condomínio</label>
+                        <select name="condominio">
+                            <option value="">Todos</option>
+                            {% for c in lista_condominios %}
+                                <option value="{{ c[0] }}"
+                                    {% if filtro_condominio == c[0]|string %}selected{% endif %}>
+                                    {{ c[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filtro-grupo">
+                        <label>Serviço</label>
+                        <select name="servico">
+                            <option value="">Todos</option>
+                            {% for s in lista_servicos %}
+                                <option value="{{ s[0] }}"
+                                    {% if filtro_servico == s[0]|string %}selected{% endif %}>
+                                    {{ s[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filtro-grupo">
+                        <label>Prestador</label>
+                        <select name="prestador">
+                            <option value="">Todos</option>
+                            {% for p in lista_prestadores %}
+                                <option value="{{ p[0] }}"
+                                    {% if filtro_prestador == p[0]|string %}selected{% endif %}>
+                                    {{ p[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filtro-grupo">
+                        <label>Data</label>
+                        <input type="date" name="data" value="{{ filtro_data }}">
+                    </div>
+
+                </div>
+
+                <!-- linha 2: Status | botões Filtrar + Limpar -->
+                <div class="filtro-status-row">
+
+                    <div class="filtro-grupo">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="" {% if not filtro_status %}selected{% endif %}>Todos</option>
+                            <option value="Agendado"    {% if filtro_status == 'Agendado'    %}selected{% endif %}>Agendado</option>
+                            <option value="Em Andamento"{% if filtro_status == 'Em Andamento'%}selected{% endif %}>Em Andamento</option>
+                            <option value="Finalizado"  {% if filtro_status == 'Finalizado'  %}selected{% endif %}>Finalizado</option>
+                            <option value="Atraso"      {% if filtro_status == 'Atraso'      %}selected{% endif %}>Atrasado</option>
+                        </select>
+                    </div>
+
+                    <div class="filtros-botoes">
+                        <button type="submit" class="btn btn-primary" style="padding:10px 24px;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Filtrar
+                        </button>
+                        <a href="/" class="btn btn-secondary" style="padding:10px 24px;">
+                            <i class="fa-solid fa-xmark"></i> Limpar
+                        </a>
+                    </div>
+
+                </div>
+
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>OS</th>
+                        <th>Condomínio</th>
+                        <th>Serviço</th>
+                        <th>Prestador</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ag in agendamentos %}
+                    <tr>
+                        <td>{{ ag[0] }}</td>
+                        <td>{{ ag[1] }}</td>
+                        <td>{{ ag[2] }}</td>
+                        <td>{{ ag[3] }}</td>
+                        <td>{{ ag[4] }}</td>
+
+                        <td>
+                            {% if ag[5] == 'Agendado' %}
+                                <span class="status status-agendado">Agendado</span>
+                            {% elif ag[5] == 'Em Andamento' %}
+                                <span class="status status-andamento">Em Andamento</span>
+                            {% elif ag[5] == 'Finalizado' %}
+                                <span class="status status-finalizado">Finalizado</span>
+                            {% else %}
+                                <span class="status status-atrasado">Atrasado</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <div class="acoes-tabela">
+
+                                {% if ag[5] != 'Finalizado' %}
+                                    <form method="POST" action="/atualizar_status/{{ ag[0] }}/Finalizado">
+                                        <button type="submit" class="btn-acao finalizar">
+                                            <i class="fa-solid fa-check"></i> Finalizar
+                                        </button>
+                                    </form>
+                                {% endif %}
+
+                                {% if ag[5] == 'Atraso' %}
+                                    <button type="button" class="btn-acao reagendar"
+                                            onclick="abrirModal('{{ ag[0] }}')">
+                                        <i class="fa-solid fa-calendar-plus"></i> Reagendar
+                                    </button>
+                                {% endif %}
+
+                                {% if ag[5] == 'Agendado' %}
+                                    <form method="POST" action="/atualizar_status/{{ ag[0] }}/Atraso">
+                                        <button type="submit" class="btn-acao atraso">
+                                            <i class="fa-solid fa-clock"></i> Marcar Atraso
+                                        </button>
+                                    </form>
+                                {% endif %}
+
+                            </div>
+                        </td>
+
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align:center; color:#64748b; padding:30px;">
+                            Nenhum agendamento encontrado com os filtros aplicados.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- MODAL REAGENDAR -->
+    <div id="modalReagendar" class="modal-overlay">
+        <div class="modal">
+            <h3><i class="fa-solid fa-calendar-plus" style="color:#d97706; margin-right:10px;"></i>Reagendar serviço</h3>
+            <form id="formReagendar" method="POST">
+                <label>Nova data:</label>
+                <input type="date" name="nova_data" required>
+                <div class="modal-botoes">
+                    <button type="submit" class="btn btn-primary" style="padding:12px 24px;">
+                        Confirmar
+                    </button>
+                    <button type="button" class="btn btn-secondary" style="padding:12px 24px;"
+                            onclick="fecharModal()">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function abrirModal(id) {
+            document.getElementById("modalReagendar").classList.add("ativo");
+            document.getElementById("formReagendar").action = "/atualizar_status/" + id + "/Agendado";
+        }
+
+        function fecharModal() {
+            document.getElementById("modalReagendar").classList.remove("ativo");
+        }
+
+        // fecha o modal clicando fora
+        document.getElementById("modalReagendar").addEventListener("click", function(e) {
+            if (e.target === this) fecharModal();
+        });
+    </script>
+
+</body>
+</html>

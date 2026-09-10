@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Gestão de Manutenção</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#f5f7fb;
+            font-family:'Inter', sans-serif;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .container{
+            width:100%;
+            max-width:420px;
+            background:white;
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0 4px 14px rgba(0,0,0,0.08);
+        }
+
+        .logo-wrap{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            margin-bottom:30px;
+        }
+
+        /* Troque o src da tag <img> abaixo pelo logo da empresa */
+        .logo-wrap img{
+            max-width:140px;
+            margin-bottom:16px;
+        }
+
+        .logo-wrap h1{
+            font-size:20px;
+            color:#111827;
+            text-align:center;
+        }
+
+        .logo-wrap p{
+            color:#64748b;
+            font-size:14px;
+            margin-top:4px;
+        }
+
+        .grupo{
+            margin-bottom:20px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:600;
+            color:#374151;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            border:1px solid #d1d5db;
+            border-radius:12px;
+            font-size:15px;
+        }
+
+        input:focus{
+            outline:none;
+            border-color:#2563eb;
+        }
+
+        button{
+            width:100%;
+            padding:16px;
+            border:none;
+            border-radius:12px;
+            background:#2563eb;
+            color:white;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#1d4ed8;
+        }
+
+        .erro{
+            background:#fee2e2;
+            color:#dc2626;
+            padding:12px 16px;
+            border-radius:10px;
+            font-size:14px;
+            font-weight:600;
+            margin-bottom:20px;
+            text-align:center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo-wrap">
+            
+            <!--
+            LOGO: substitua o arquivo em static/img/logo.png pela logo da sua empresa.
+            Formato recomendado: PNG com fundo transparente, largura máxima de ~140px
+            (ver .logo-wrap img no CSS abaixo, que já limita max-width:140px).
+            Caso não tenha uma logo ainda, você pode usar uma imagem placeholder
+            temporária ou remover esta tag <img> até ter uma logo definitiva.
+            -->
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo da empresa">
+            <h1>Sistema de Gestão de Manutenção</h1>
+            <p>Faça login para continuar</p>
+        </div>
+
+        {% if erro %}
+            <div class="erro">{{ erro }}</div>
+        {% endif %}
+
+        <form method="POST" action="/login">
+
+            <div class="grupo">
+                <label>Usuário</label>
+                <input type="text" name="login" placeholder="nome.sobrenome"
+                       value="{{ login_digitado or '' }}" autofocus required>
+            </div>
+
+            <div class="grupo">
+                <label>Senha</label>
+                <input type="password" name="senha" placeholder="6 dígitos"
+                       inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required>
+            </div>
+
+            <button type="submit">Entrar</button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

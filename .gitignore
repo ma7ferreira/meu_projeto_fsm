@@ -1,0 +1,18 @@
+# Variaveis de ambiente e segredos
+.env
+
+# Banco de dados e planilhas com dados reais
+*.db
+*.xlsx
+
+# Arquivos gerados pelo Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual (se você usar um)
+venv/
+env/
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db

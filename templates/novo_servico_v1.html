@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incluir Serviço</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#f5f7fb;
+            font-family:'Inter', sans-serif;
+            padding:40px;
+        }
+
+        .container{
+            max-width:750px;
+            margin:auto;
+            background:white;
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0 4px 14px rgba(0,0,0,0.08);
+        }
+
+        h1{
+            margin-bottom:30px;
+            color:#111827;
+        }
+
+        .grupo{
+            margin-bottom:22px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:600;
+            color:#374151;
+        }
+
+        input,
+        select{
+            width:100%;
+            padding:14px;
+            border:1px solid #d1d5db;
+            border-radius:12px;
+            font-size:15px;
+        }
+
+        input:focus,
+        select:focus{
+            outline:none;
+            border-color:#2563eb;
+        }
+
+        button{
+            width:100%;
+            padding:16px;
+            border:none;
+            border-radius:12px;
+            background:#2563eb;
+            color:white;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#1d4ed8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Incluir Serviço</h1>
+
+        <form action="/salvar_servico" method="POST">
+
+            <div class="grupo">
+                <label>Condomínio</label>
+
+                <select name="condominio" required>
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    {% for c in condominios %}
+                        <!--
+                        <option value="{{ c[0] }}">
+                            {{ c[1] }}
+                        </option>
+                        -->
+                        <option value="{{ c.id_condominio }}">
+                            {{ c.nome_condominio }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="grupo">
+                <label>Tipo de Serviço</label>
+
+                <select id = "servico" name="servico" onchange="atulizarPrestadores()" required >
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    {% for s in servicos %}
+                        <!--
+                        <option value="{{ s[0] }}">
+                            {{ s[1] }}
+                        </option>
+                        -->
+                        <option value="{{ s.id_servico }}">
+                            {{ s.nome_servico }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="grupo">
+                <label>Prestador</label>
+
+                <select id="prestador" name="prestador" required>
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="grupo">
+                <label>Data do Serviço</label>
+                <input type="date" name="data_servico" required>
+            </div>
+
+            <div class="grupo">
+                <label>Status</label>
+
+                <select name="status" required>
+
+                    <option value="Agendado">
+                        Agendado
+                    </option>
+
+                    <option value="Em Andamento">
+                        Em Andamento
+                    </option>
+
+                    <option value="Finalizado">
+                        Finalizado
+                    </option>
+
+                    <option value="Atrasado">
+                        Atrasado
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button type="submit">
+                Salvar Serviço
+            </button>
+
+        </form>
+
+    </div>
+
+<script>
+    function atulizarPrestadores(){
+        // Captura o valor selecionado no dropdown de serviços
+        const servico = document.getElementById('servico').value;
+        const prestadorSelecionado = document.getElementById('prestador');
+
+        // Limpa o dropdown de prestadores mostrando estado de carregamento
+        prestadorSelecionado.innerHTML = '<option value="">Carregando...</option>';
+
+        // Se o usuário selecionar a opção vazia ("Selecione"), resgata o estado inicial
+        if (servico === "") {
+            prestadorSelecionado.innerHTML = '<option value="">Selecione um prestador</option>';
+            return;
+        }
+
+        // CORREÇÃO 1: Usando a variável correta 'servico' na rota do Flask
+        fetch(`/get_prestador/${servico}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Reseta o dropdown para receber os novos dados
+                prestadorSelecionado.innerHTML = '<option value="">Selecione um prestador</option>';
+
+                // Trata o caso do backend retornar uma lista vazia
+                if (data.length === 0) {
+                    prestadorSelecionado.innerHTML = '<option value="">Nenhum prestador encontrado</option>';
+                    return;
+                }
+
+                // Popula o dropdown iterando sobre o array retornado pelo Pandas/Flask
+                data.forEach(prestador => {
+                    const option = document.createElement('option');
+
+                    // CORREÇÃO 2: Acessando as propriedades de dentro do objeto 'prestador'
+                    option.value = prestador.id_prestador;
+                    option.text = prestador.nome_prestador;
+
+                    prestadorSelecionado.add(option);
+                });
+            })
+            .catch(error => {
+                console.error("Erro ao buscar prestadores:", error);
+                prestadorSelecionado.innerHTML = '<option value="">Erro ao carregar prestadores</option>';
+            });
+    }
+</script>
+
+
+</body>
+
+</html>
